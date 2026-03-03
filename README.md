@@ -1,6 +1,6 @@
 1.Clone the Repo
   ```
-  git clone https://github.com/CereenaG/Interactive-Image-Noise-Simulation-Restoration-Tool.git
+  git clone [https://github.com/CereenaG/Interactive-Image-Noise-Simulation-Restoration-Tool.git](https://github.com/CereenaG/Interactive-Image-Noise-Simulation-Restoration-Tool.git)
   cd Interactive-Image-Noise-Simulation-Restoration-Tool
   ```
 2.Create a Virtual Environment
