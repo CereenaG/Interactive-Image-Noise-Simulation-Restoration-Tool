@@ -1,37 +1,39 @@
-import cv2
 import numpy as np
+import cv2
 
 
-# ---------------- NOISE MODELS ----------------
-
-def add_gaussian_noise(image, sigma=50):
-    noise = np.random.normal(0, sigma, image.shape)
-    noisy = image + noise
-    return np.clip(noisy, 0, 255).astype(np.uint8)
-
-
-def add_salt_pepper_noise(image, prob=0.08):
+def add_salt_pepper_noise(image, density):
     noisy = image.copy()
-    rand = np.random.rand(*image.shape[:2])
+    num_pixels = int(density * image.shape[0] * image.shape[1])
 
-    noisy[rand < prob] = 0
-    noisy[rand > 1 - prob] = 255
+    # Salt
+    coords = [np.random.randint(0, i - 1, num_pixels) for i in image.shape[:2]]
+    noisy[coords[0], coords[1]] = 255
+
+    # Pepper
+    coords = [np.random.randint(0, i - 1, num_pixels) for i in image.shape[:2]]
+    noisy[coords[0], coords[1]] = 0
 
     return noisy
 
 
-# ---------------- FILTERS ----------------
+def add_gaussian_noise(image, mean, std):
+    image_float = image.astype(np.float32)
+    gaussian = np.random.normal(mean, std, image.shape).astype(np.float32)
 
-# Linear Filter
-def mean_filter(image):
-    return cv2.blur(image, (5, 5))
+    noisy = image_float + gaussian
+    noisy = np.clip(noisy, 0, 255)
 
-
-# Linear Filter
-def gaussian_filter(image):
-    return cv2.GaussianBlur(image, (5, 5), 0)
+    return noisy.astype(np.uint8)
 
 
-# Non-Linear Filter
-def median_filter(image):
-    return cv2.medianBlur(image, 5)
+def mean_filter(image, ksize):
+    return cv2.blur(image, (ksize, ksize))
+
+
+def gaussian_filter(image, ksize):
+    return cv2.GaussianBlur(image, (ksize, ksize), 0)
+
+
+def median_filter(image, ksize):
+    return cv2.medianBlur(image, ksize)
